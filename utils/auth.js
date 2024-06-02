@@ -15,16 +15,24 @@ const checkUser = (uid) => new Promise((resolve, reject) => {
 });
 
 const registerUser = (userInfo) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/user`, {
-    method: 'POST',
-    body: JSON.stringify(userInfo),
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  })
-    .then((resp) => resolve(resp.json()))
-    .catch(reject);
+  if (!userInfo || !userInfo.uid || !userInfo.email || !userInfo.name) {
+    reject(new Error('Invalid user information'));
+  } else {
+    fetch(`${clientCredentials.databaseURL}/user`, {
+      method: 'POST',
+      body: JSON.stringify(userInfo),
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    })
+      .then((resp) => resp.json())
+      .then(resolve)
+      .catch((error) => {
+        console.error('Error registering user:', error);
+        reject(new Error('Error registering user'));
+      });
+  }
 });
 
 const signIn = () => {
