@@ -22,6 +22,7 @@ const AuthProvider = (props) => {
               uid: oAuthUser.uid,
               email: oAuthUser.email,
               name: oAuthUser.displayName,
+              isAdmin: oAuthUser.isAdmin || false,
             };
             registerUser(userInfo)
               .then((newUserInfo) => {
@@ -46,7 +47,7 @@ const AuthProvider = (props) => {
         setUser(false);
       }
     });
-    return () => unsubscribe();
+    return () => unsubscribe(); // Cleanup subscription on unmount
   }, [updateUser]);
 
   const value = useMemo(() => ({
