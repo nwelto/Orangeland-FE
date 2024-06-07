@@ -7,10 +7,11 @@ import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import { deleteGuestById } from '../../API/GuestData';
 
-const GuestCard = ({ guest, reservations, onEdit }) => {
+const GuestCard = ({ guest, onEdit }) => {
   const handleDelete = (guestId) => {
     deleteGuestById(guestId)
       .then(() => {
+        console.log(`Deleted guest with ID: ${guestId}`);
         onEdit();
       })
       .catch((error) => console.error(`Error deleting guest with ID: ${guestId}`, error));
@@ -20,29 +21,16 @@ const GuestCard = ({ guest, reservations, onEdit }) => {
     <Card variant="outlined">
       <CardContent>
         <Typography variant="h5" component="div">
-          {guest.Name}
+          {guest.name || 'N/A'}
         </Typography>
         <Typography color="text.secondary">
-          RV Type: {guest.RVType}
+          RV Type: {guest.rvType || 'N/A'}
         </Typography>
-        <Typography variant="body2">
-          Reservations:
-        </Typography>
-        {reservations.length > 0 ? (
-          reservations.map((reservation) => (
-            <Typography key={reservation.Id} variant="body2">
-              {`ID: ${reservation.Id}, Start: ${reservation.StartDate}, End: ${reservation.EndDate}, Status: ${reservation.Status}`}
-            </Typography>
-          ))
-        ) : (
-          <Typography variant="body2">
-            No reservations
-          </Typography>
-        )}
+
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => onEdit(guest.GuestId)}>Edit</Button>
-        <Button size="small" onClick={() => handleDelete(guest.GuestId)}>Delete</Button>
+        <Button size="small" onClick={() => onEdit(guest.guestId)}>Edit</Button>
+        <Button size="small" onClick={() => handleDelete(guest.guestId)}>Delete</Button>
       </CardActions>
     </Card>
   );
@@ -50,18 +38,10 @@ const GuestCard = ({ guest, reservations, onEdit }) => {
 
 GuestCard.propTypes = {
   guest: PropTypes.shape({
-    GuestId: PropTypes.number.isRequired,
-    Name: PropTypes.string.isRequired,
-    RVType: PropTypes.string.isRequired,
+    guestId: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    rvType: PropTypes.string.isRequired,
   }).isRequired,
-  reservations: PropTypes.arrayOf(
-    PropTypes.shape({
-      Id: PropTypes.number.isRequired,
-      StartDate: PropTypes.string.isRequired,
-      EndDate: PropTypes.string.isRequired,
-      Status: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
   onEdit: PropTypes.func.isRequired,
 };
 
