@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import { useRouter } from 'next/router';
 import { getAllGuests } from '../../API/GuestData';
 import GuestCard from '../../components/Cards/GuestCard';
 
 const GuestPage = () => {
   const [guests, setGuests] = useState([]);
+  const router = useRouter();
 
   const fetchGuests = () => {
     getAllGuests().then(setGuests).catch((error) => console.error(error));
@@ -16,6 +20,10 @@ const GuestPage = () => {
 
   const handleEdit = () => {
     fetchGuests();
+  };
+
+  const handleCreateGuest = () => {
+    router.push('/guests/new');
   };
 
   return (
@@ -31,6 +39,14 @@ const GuestPage = () => {
           </Grid>
         ))}
       </Grid>
+      <Fab
+        color="primary"
+        aria-label="add"
+        style={{ position: 'fixed', bottom: 16, right: 16 }}
+        onClick={handleCreateGuest}
+      >
+        <AddIcon />
+      </Fab>
     </div>
   );
 };
