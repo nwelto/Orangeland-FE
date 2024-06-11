@@ -14,7 +14,7 @@ const ReservationCard = ({ reservation, onEdit }) => {
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
-    if (reservation.guestId) {
+    if (reservation.guestId && !Number.isNaN(reservation.guestId)) {
       getGuestById(reservation.guestId)
         .then((guest) => {
           console.warn('Fetched guest:', guest);
