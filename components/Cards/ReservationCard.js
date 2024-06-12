@@ -5,13 +5,17 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
+import { useRouter } from 'next/router';
 import { deleteReservationById } from '../../API/ReservationData';
 import { getGuestById } from '../../API/GuestData';
 import { getUserById } from '../../API/UserData';
+import { getRVSiteById } from '../../API/RVSiteData'; // Import the function to get site details
 
 const ReservationCard = ({ reservation, onEdit }) => {
   const [guestName, setGuestName] = useState('');
   const [userName, setUserName] = useState('');
+  const [siteNumber, setSiteNumber] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     if (reservation.guestId && !Number.isNaN(reservation.guestId)) {
@@ -31,7 +35,16 @@ const ReservationCard = ({ reservation, onEdit }) => {
         })
         .catch((error) => console.error(`Error fetching user with ID: ${reservation.userId}`, error));
     }
-  }, [reservation.guestId, reservation.userId]);
+
+    if (reservation.siteId) {
+      getRVSiteById(reservation.siteId)
+        .then((site) => {
+          console.warn('Fetched site:', site);
+          setSiteNumber(site.siteNumber);
+        })
+        .catch((error) => console.error(`Error fetching site with ID: ${reservation.siteId}`, error));
+    }
+  }, [reservation.guestId, reservation.userId, reservation.siteId]);
 
   const handleDelete = (reservationId) => {
     deleteReservationById(reservationId)
@@ -39,6 +52,10 @@ const ReservationCard = ({ reservation, onEdit }) => {
         onEdit();
       })
       .catch((error) => console.error(`Error deleting reservation with ID: ${reservationId}`, error));
+  };
+
+  const handleEdit = (reservationId) => {
+    router.push(`/reservations/edit/${reservationId}`);
   };
 
   const statusMap = {
@@ -59,7 +76,7 @@ const ReservationCard = ({ reservation, onEdit }) => {
           User: {userName}
         </Typography>
         <Typography color="text.secondary">
-          Site ID: {reservation.siteId}
+          Site: {siteNumber}
         </Typography>
         <Typography color="text.secondary">
           Guest: {guestName}
@@ -81,7 +98,7 @@ const ReservationCard = ({ reservation, onEdit }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => onEdit(reservation.id)}>Edit</Button>
+        <Button size="small" onClick={() => handleEdit(reservation.id)}>Edit</Button>
         <Button size="small" onClick={() => handleDelete(reservation.id)}>Delete</Button>
       </CardActions>
     </Card>

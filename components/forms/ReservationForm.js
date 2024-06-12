@@ -5,12 +5,12 @@ import {
   TextField, Button, MenuItem, Select, InputLabel, FormControl, Grid,
 } from '@mui/material';
 import { useRouter } from 'next/router';
-import { createReservation } from '../../API/ReservationData';
+import { createReservation, updateReservation } from '../../API/ReservationData';
 import { getAllGuests } from '../../API/GuestData';
 import { getAllRVSites } from '../../API/RVSiteData';
 import { useAuth } from '../../utils/context/authContext';
 
-const ReservationForm = ({ onSave }) => {
+const ReservationForm = ({ onSave, existingReservation }) => {
   const { user } = useAuth(); // Get the current user from the auth context
   const router = useRouter(); // Initialize the router
   const [reservation, setReservation] = useState({
@@ -22,6 +22,7 @@ const ReservationForm = ({ onSave }) => {
     status: 0,
     guestId: '',
     userId: user ? user.id : '', // Set userId from the current user
+    ...existingReservation, // Pre-fill form if editing an existing reservation
   });
   const [guests, setGuests] = useState([]);
   const [rvSites, setRVSites] = useState([]);
@@ -52,6 +53,16 @@ const ReservationForm = ({ onSave }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    // Update form fields when existingReservation is provided
+    if (existingReservation) {
+      setReservation((prev) => ({
+        ...prev,
+        ...existingReservation,
+      }));
+    }
+  }, [existingReservation]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setReservation((prev) => ({
@@ -70,13 +81,16 @@ const ReservationForm = ({ onSave }) => {
       return;
     }
 
-    createReservation(reservation)
+    const action = existingReservation.id ? updateReservation : createReservation;
+    const reservationId = existingReservation.id ? existingReservation.id : null;
+
+    action(reservationId, reservation)
       .then(() => {
-        console.warn('Reservation created successfully');
+        console.warn(`Reservation ${existingReservation.id ? 'updated' : 'created'} successfully`);
         onSave();
         router.push('/reservations/reservationPage'); // Navigate to the new route
       })
-      .catch((error) => console.error('Error creating reservation:', error));
+      .catch((error) => console.error(`Error ${existingReservation.id ? 'updating' : 'creating'} reservation:`, error));
   };
 
   return (
@@ -193,6 +207,21 @@ const ReservationForm = ({ onSave }) => {
 
 ReservationForm.propTypes = {
   onSave: PropTypes.func.isRequired,
+  existingReservation: PropTypes.shape({
+    id: PropTypes.number,
+    siteId: PropTypes.number,
+    startDate: PropTypes.string,
+    endDate: PropTypes.string,
+    numberOfGuests: PropTypes.number,
+    numberOfDogs: PropTypes.number,
+    status: PropTypes.number,
+    guestId: PropTypes.number,
+    userId: PropTypes.number,
+  }), // Define the shape for existingReservation
+};
+
+ReservationForm.defaultProps = {
+  existingReservation: null, // Add this line
 };
 
 export default ReservationForm;
