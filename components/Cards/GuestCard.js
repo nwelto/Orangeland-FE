@@ -5,9 +5,12 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
+import { useRouter } from 'next/router';
 import { deleteGuestById } from '../../API/GuestData';
 
 const GuestCard = ({ guest, onEdit }) => {
+  const router = useRouter();
+
   const handleDelete = (guestId) => {
     deleteGuestById(guestId)
       .then(() => {
@@ -15,6 +18,10 @@ const GuestCard = ({ guest, onEdit }) => {
         onEdit();
       })
       .catch((error) => console.error(`Error deleting guest with ID: ${guestId}`, error));
+  };
+
+  const handleEdit = (guestId) => {
+    router.push(`/guests/edit/${guestId}`);
   };
 
   return (
@@ -26,10 +33,15 @@ const GuestCard = ({ guest, onEdit }) => {
         <Typography color="text.secondary">
           RV Type: {guest.rvType || 'N/A'}
         </Typography>
-
+        <Typography color="text.secondary">
+          Phone Number: {guest.phoneNumber || 'N/A'}
+        </Typography>
+        <Typography color="text.secondary">
+          Email: {guest.email || 'N/A'}
+        </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => onEdit(guest.guestId)}>Edit</Button>
+        <Button size="small" onClick={() => handleEdit(guest.guestId)}>Edit</Button>
         <Button size="small" onClick={() => handleDelete(guest.guestId)}>Delete</Button>
       </CardActions>
     </Card>
@@ -41,6 +53,8 @@ GuestCard.propTypes = {
     guestId: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     rvType: PropTypes.string.isRequired,
+    phoneNumber: PropTypes.string,
+    email: PropTypes.string,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
 };

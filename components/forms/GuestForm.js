@@ -6,9 +6,11 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { createGuest, updateGuest, getGuestById } from '../../API/GuestData';
 
-const GuestForm = ({ guestId, onFormSubmit }) => {
+const GuestForm = ({ guestId, existingGuest, onFormSubmit }) => {
   const [name, setName] = useState('');
   const [rvType, setRvType] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [formError, setFormError] = useState('');
   const router = useRouter();
 
@@ -18,14 +20,23 @@ const GuestForm = ({ guestId, onFormSubmit }) => {
         .then((guest) => {
           setName(guest.name);
           setRvType(guest.rvType);
+          setPhoneNumber(guest.phoneNumber);
+          setEmail(guest.email);
         })
         .catch((error) => console.error('Error fetching guest:', error));
+    } else if (existingGuest) {
+      setName(existingGuest.name);
+      setRvType(existingGuest.rvType);
+      setPhoneNumber(existingGuest.phoneNumber);
+      setEmail(existingGuest.email);
     }
-  }, [guestId]);
+  }, [guestId, existingGuest]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newGuest = { name, rvType };
+    const newGuest = {
+      name, rvType, phoneNumber, email,
+    };
 
     if (guestId) {
       updateGuest(guestId, newGuest)
@@ -75,6 +86,22 @@ const GuestForm = ({ guestId, onFormSubmit }) => {
           fullWidth
           margin="normal"
         />
+        <TextField
+          label="Phone Number"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          required
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          fullWidth
+          margin="normal"
+        />
         <Button type="submit" variant="contained" color="primary">
           {guestId ? 'Update Guest' : 'Create Guest'}
         </Button>
@@ -85,11 +112,19 @@ const GuestForm = ({ guestId, onFormSubmit }) => {
 
 GuestForm.propTypes = {
   guestId: PropTypes.number,
+  existingGuest: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    rvType: PropTypes.string,
+    phoneNumber: PropTypes.string,
+    email: PropTypes.string,
+  }),
   onFormSubmit: PropTypes.func,
 };
 
 GuestForm.defaultProps = {
   guestId: null,
+  existingGuest: null,
   onFormSubmit: () => {},
 };
 

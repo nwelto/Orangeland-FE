@@ -1,4 +1,3 @@
-// pages/reservations/edit/[id].js
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getReservationById } from '../../../API/ReservationData';
