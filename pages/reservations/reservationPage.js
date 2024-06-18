@@ -13,16 +13,15 @@ const ReservationsPage = () => {
   useEffect(() => {
     getAllReservations()
       .then((data) => {
-        console.warn('Fetched reservations:', data);
         setReservations(data);
       })
-      .catch((error) => console.error('Error fetching reservations:', error));
+      .catch();
   }, []);
 
   const handleEdit = () => {
     getAllReservations()
       .then((data) => setReservations(data))
-      .catch((error) => console.error('Error fetching reservations:', error));
+      .catch();
   };
 
   const handleCreateReservation = () => {
@@ -31,6 +30,7 @@ const ReservationsPage = () => {
 
   return (
     <div style={{ position: 'relative' }}>
+      <h1>All Reservations</h1>
       <Grid container spacing={2}>
         {reservations.map((reservation) => (
           <Grid item xs={12} sm={6} md={4} key={reservation.id}>

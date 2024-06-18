@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box,
 } from '@mui/material';
 import { useAuth } from '../utils/context/authContext';
 import { getAllRVSites } from '../API/RVSiteData';
@@ -13,7 +13,7 @@ const RVSitePage = () => {
     if (user && user.isAdmin) {
       getAllRVSites()
         .then(setRVSites)
-        .catch((error) => console.error('Error fetching RV sites:', error));
+        .catch();
     }
   }, [user]);
 
@@ -22,28 +22,31 @@ const RVSitePage = () => {
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="rv sites table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Site ID</TableCell>
-            <TableCell>Site Number</TableCell>
-            <TableCell>Has Grassy Area</TableCell>
-            <TableCell>Is Pull-Through</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rvSites.map((site) => (
-            <TableRow key={site.siteId}>
-              <TableCell>{site.siteId}</TableCell>
-              <TableCell>{site.siteNumber}</TableCell>
-              <TableCell>{site.hasGrassyArea ? 'Yes' : 'No'}</TableCell>
-              <TableCell>{site.isPullThrough ? 'Yes' : 'No'}</TableCell>
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h1" sx={{ fontSize: '2rem', marginBottom: '1rem' }}>RV Sites</Typography>
+      <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+        <Table aria-label="rv sites table">
+          <TableHead sx={{ backgroundColor: '#33658A', color: 'white' }}>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Site ID</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Site Number</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Has Grassy Area</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Is Pull-Through</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {rvSites.map((site, index) => (
+              <TableRow key={site.siteId} sx={{ backgroundColor: index % 2 === 0 ? '#008080' : '#33658A', color: 'white' }}>
+                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{site.siteId}</TableCell>
+                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{site.siteNumber}</TableCell>
+                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{site.hasGrassyArea ? 'Yes' : 'No'}</TableCell>
+                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{site.isPullThrough ? 'Yes' : 'No'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 

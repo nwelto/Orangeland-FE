@@ -12,8 +12,7 @@ const getAllBikes = () => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching all bikes:', error);
+    .catch(() => {
       reject(new Error('Error fetching all bikes'));
     });
 });
@@ -29,8 +28,7 @@ const getBikeById = (bikeId) => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching bike by ID:', error);
+    .catch(() => {
       reject(new Error('Error fetching bike by ID'));
     });
 });

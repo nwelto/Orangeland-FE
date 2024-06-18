@@ -14,10 +14,10 @@ const GuestCard = ({ guest, onEdit }) => {
   const handleDelete = (guestId) => {
     deleteGuestById(guestId)
       .then(() => {
-        console.log(`Deleted guest with ID: ${guestId}`);
         onEdit();
       })
-      .catch((error) => console.error(`Error deleting guest with ID: ${guestId}`, error));
+      .catch(() => {
+      });
   };
 
   const handleEdit = (guestId) => {
@@ -25,24 +25,28 @@ const GuestCard = ({ guest, onEdit }) => {
   };
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ backgroundColor: '#008080', color: 'white', borderRadius: 2 }}>
       <CardContent>
-        <Typography variant="h5" component="div">
+        <Typography variant="h5" component="div" sx={{ color: 'white' }}>
           {guest.name || 'N/A'}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           RV Type: {guest.rvType || 'N/A'}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           Phone Number: {guest.phoneNumber || 'N/A'}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           Email: {guest.email || 'N/A'}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => handleEdit(guest.guestId)}>Edit</Button>
-        <Button size="small" onClick={() => handleDelete(guest.guestId)}>Delete</Button>
+        <Button size="small" variant="contained" sx={{ backgroundColor: '#33658A', color: 'white' }} onClick={() => handleEdit(guest.guestId)}>
+          Edit
+        </Button>
+        <Button size="small" variant="contained" color="error" onClick={() => handleDelete(guest.guestId)}>
+          Delete
+        </Button>
       </CardActions>
     </Card>
   );

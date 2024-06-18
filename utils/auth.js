@@ -28,8 +28,7 @@ const registerUser = (userInfo) => new Promise((resolve, reject) => {
     })
       .then((resp) => resp.json())
       .then(resolve)
-      .catch((error) => {
-        console.error('Error registering user:', error);
+      .catch(() => {
         reject(new Error('Error registering user'));
       });
   }
@@ -45,7 +44,7 @@ const signOut = () => {
 };
 
 export {
-  signIn, //
+  signIn,
   signOut,
   checkUser,
   registerUser,
