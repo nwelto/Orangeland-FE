@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { deleteReservationById } from '../../API/ReservationData';
 import { getGuestById } from '../../API/GuestData';
 import { getUserById } from '../../API/UserData';
-import { getRVSiteById } from '../../API/RVSiteData'; // Import the function to get site details
+import { getRVSiteById } from '../../API/RVSiteData';
 
 const ReservationCard = ({ reservation, onEdit }) => {
   const [guestName, setGuestName] = useState('');
@@ -21,28 +21,25 @@ const ReservationCard = ({ reservation, onEdit }) => {
     if (reservation.guestId && !Number.isNaN(reservation.guestId)) {
       getGuestById(reservation.guestId)
         .then((guest) => {
-          console.warn('Fetched guest:', guest);
           setGuestName(guest.name);
         })
-        .catch((error) => console.error(`Error fetching guest with ID: ${reservation.guestId}`, error));
+        .catch();
     }
 
     if (reservation.userId) {
       getUserById(reservation.userId)
         .then((user) => {
-          console.warn('Fetched user:', user);
           setUserName(user.name);
         })
-        .catch((error) => console.error(`Error fetching user with ID: ${reservation.userId}`, error));
+        .catch();
     }
 
     if (reservation.siteId) {
       getRVSiteById(reservation.siteId)
         .then((site) => {
-          console.warn('Fetched site:', site);
           setSiteNumber(site.siteNumber);
         })
-        .catch((error) => console.error(`Error fetching site with ID: ${reservation.siteId}`, error));
+        .catch();
     }
   }, [reservation.guestId, reservation.userId, reservation.siteId]);
 
@@ -51,7 +48,7 @@ const ReservationCard = ({ reservation, onEdit }) => {
       .then(() => {
         onEdit();
       })
-      .catch((error) => console.error(`Error deleting reservation with ID: ${reservationId}`, error));
+      .catch();
   };
 
   const handleEdit = (reservationId) => {
@@ -64,42 +61,44 @@ const ReservationCard = ({ reservation, onEdit }) => {
     2: 'Closed',
   };
 
-  console.warn('Reservation data:', reservation);
-
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ backgroundColor: '#008080', color: 'white', borderRadius: 2 }}>
       <CardContent>
-        <Typography variant="h5" component="div">
+        <Typography variant="h5" component="div" sx={{ color: 'white' }}>
           Reservation ID: {reservation.id}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           User: {userName}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           Site: {siteNumber}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           Guest: {guestName}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           Start Date: {reservation.startDate}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           End Date: {reservation.endDate}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           Number of Guests: {reservation.numberOfGuests}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           Number of Dogs: {reservation.numberOfDogs}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography sx={{ color: 'white' }}>
           Status: {statusMap[reservation.status]}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => handleEdit(reservation.id)}>Edit</Button>
-        <Button size="small" onClick={() => handleDelete(reservation.id)}>Delete</Button>
+        <Button size="small" variant="contained" sx={{ backgroundColor: '#33658A', color: 'white' }} onClick={() => handleEdit(reservation.id)}>
+          Edit
+        </Button>
+        <Button size="small" variant="contained" color="error" onClick={() => handleDelete(reservation.id)}>
+          Delete
+        </Button>
       </CardActions>
     </Card>
   );

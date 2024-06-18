@@ -12,8 +12,7 @@ const getAllRVSites = () => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching all RV sites:', error);
+    .catch(() => {
       reject(new Error('Error fetching all RV sites'));
     });
 });
@@ -29,8 +28,7 @@ const getRVSiteById = (siteId) => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching RV site by ID:', error);
+    .catch(() => {
       reject(new Error('Error fetching RV site by ID'));
     });
 });

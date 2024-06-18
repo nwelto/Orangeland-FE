@@ -11,7 +11,7 @@ const GuestPage = () => {
   const router = useRouter();
 
   const fetchGuests = () => {
-    getAllGuests().then(setGuests).catch((error) => console.error(error));
+    getAllGuests().then(setGuests).catch();
   };
 
   useEffect(() => {

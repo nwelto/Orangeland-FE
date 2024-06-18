@@ -1,8 +1,7 @@
-// ReservationForm.js
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextField, Button, MenuItem, Select, InputLabel, FormControl, Grid,
+  TextField, Button, MenuItem, Select, Typography, FormControl, Grid, Box,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { createReservation, updateReservation } from '../../API/ReservationData';
@@ -11,8 +10,8 @@ import { getAllRVSites } from '../../API/RVSiteData';
 import { useAuth } from '../../utils/context/authContext';
 
 const ReservationForm = ({ onSave, existingReservation }) => {
-  const { user } = useAuth(); // Get the current user from the auth context
-  const router = useRouter(); // Initialize the router
+  const { user } = useAuth();
+  const router = useRouter();
   const [reservation, setReservation] = useState({
     siteId: '',
     startDate: '',
@@ -21,8 +20,7 @@ const ReservationForm = ({ onSave, existingReservation }) => {
     numberOfDogs: '',
     status: 0,
     guestId: '',
-    userId: user ? user.id : '', // Set userId from the current user
-    ...existingReservation, // Pre-fill form if editing an existing reservation
+    userId: user ? user.id : '',
   });
   const [guests, setGuests] = useState([]);
   const [rvSites, setRVSites] = useState([]);
@@ -30,21 +28,16 @@ const ReservationForm = ({ onSave, existingReservation }) => {
   useEffect(() => {
     getAllGuests()
       .then((data) => {
-        console.warn('Fetched guests:', data);
         setGuests(data);
-      })
-      .catch((error) => console.error('Error fetching guests:', error));
+      });
 
     getAllRVSites()
       .then((data) => {
-        console.warn('Fetched RV sites:', data);
         setRVSites(data);
-      })
-      .catch((error) => console.error('Error fetching RV sites:', error));
+      });
   }, []);
 
   useEffect(() => {
-    // Update userId whenever user changes
     if (user) {
       setReservation((prev) => ({
         ...prev,
@@ -54,11 +47,11 @@ const ReservationForm = ({ onSave, existingReservation }) => {
   }, [user]);
 
   useEffect(() => {
-    // Update form fields when existingReservation is provided
     if (existingReservation) {
       setReservation((prev) => ({
         ...prev,
         ...existingReservation,
+        userId: existingReservation.userId ?? user.id,
       }));
     }
   }, [existingReservation]);
@@ -69,41 +62,60 @@ const ReservationForm = ({ onSave, existingReservation }) => {
       ...prev,
       [name]: value,
     }));
-    console.warn('Updated reservation state:', { ...reservation, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.warn('Submitting reservation:', reservation);
 
     if (!reservation.siteId || !reservation.guestId || !reservation.startDate || !reservation.endDate || !reservation.userId) {
-      console.error('Missing required fields');
       return;
     }
 
-    const action = existingReservation.id ? updateReservation : createReservation;
-    const reservationId = existingReservation.id ? existingReservation.id : null;
+    const payload = {
+      ...reservation,
+      userId: reservation.userId,
+      siteId: parseInt(reservation.siteId, 10),
+      guestId: parseInt(reservation.guestId, 10),
+      numberOfGuests: parseInt(reservation.numberOfGuests, 10),
+      numberOfDogs: parseInt(reservation.numberOfDogs, 10),
+    };
 
-    action(reservationId, reservation)
-      .then(() => {
-        console.warn(`Reservation ${existingReservation.id ? 'updated' : 'created'} successfully`);
-        onSave();
-        router.push('/reservations/reservationPage'); // Navigate to the new route
-      })
-      .catch((error) => console.error(`Error ${existingReservation.id ? 'updating' : 'creating'} reservation:`, error));
+    const action = existingReservation && existingReservation.id ? updateReservation : createReservation;
+
+    if (existingReservation && existingReservation.id) {
+      action(existingReservation.id, payload)
+        .then(() => {
+          onSave();
+          router.push('/reservations/reservationPage');
+        });
+    } else {
+      action(payload)
+        .then(() => {
+          onSave();
+          router.push('/reservations/reservationPage');
+        });
+    }
+  };
+
+  const handleStatusChange = (status) => {
+    setReservation((prev) => ({
+      ...prev,
+      status,
+    }));
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <FormControl fullWidth margin="normal">
-            <InputLabel>Guest</InputLabel>
+            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Guest</Typography>
             <Select
               name="guestId"
               value={reservation.guestId}
               onChange={handleChange}
               required
+              style={{ backgroundColor: 'white' }}
             >
               {guests.map((guest) => (
                 <MenuItem key={guest.guestId} value={guest.guestId}>
@@ -113,14 +125,15 @@ const ReservationForm = ({ onSave, existingReservation }) => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <FormControl fullWidth margin="normal">
-            <InputLabel>RV Site</InputLabel>
+            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>RV Site</Typography>
             <Select
               name="siteId"
               value={reservation.siteId}
               onChange={handleChange}
               required
+              style={{ backgroundColor: 'white' }}
             >
               {rvSites.map((site) => (
                 <MenuItem key={site.siteId} value={site.siteId}>
@@ -130,10 +143,10 @@ const ReservationForm = ({ onSave, existingReservation }) => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Start Date</Typography>
           <TextField
             name="startDate"
-            label="Start Date"
             type="date"
             value={reservation.startDate}
             onChange={handleChange}
@@ -141,12 +154,13 @@ const ReservationForm = ({ onSave, existingReservation }) => {
             fullWidth
             margin="normal"
             InputLabelProps={{ shrink: true }}
+            style={{ backgroundColor: 'white' }}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>End Date</Typography>
           <TextField
             name="endDate"
-            label="End Date"
             type="date"
             value={reservation.endDate}
             onChange={handleChange}
@@ -154,48 +168,73 @@ const ReservationForm = ({ onSave, existingReservation }) => {
             fullWidth
             margin="normal"
             InputLabelProps={{ shrink: true }}
+            style={{ backgroundColor: 'white' }}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Number of Guests</Typography>
           <TextField
             name="numberOfGuests"
-            label="Number of Guests"
             type="number"
             value={reservation.numberOfGuests}
             onChange={handleChange}
             required
             fullWidth
             margin="normal"
+            style={{ backgroundColor: 'white' }}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Number of Dogs</Typography>
           <TextField
             name="numberOfDogs"
-            label="Number of Dogs"
             type="number"
             value={reservation.numberOfDogs}
             onChange={handleChange}
             required
             fullWidth
             margin="normal"
+            style={{ backgroundColor: 'white' }}
           />
         </Grid>
         <Grid item xs={12}>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Status</InputLabel>
-            <Select
-              name="status"
-              value={reservation.status}
-              onChange={handleChange}
-              required
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={() => handleStatusChange(0)}
+              sx={{
+                backgroundColor: reservation.status === 0 ? 'black' : '#008080',
+                color: 'white',
+                width: '32%',
+              }}
             >
-              <MenuItem value={0}>Pending</MenuItem>
-              <MenuItem value={1}>Confirmed</MenuItem>
-              <MenuItem value={2}>Closed</MenuItem>
-            </Select>
-          </FormControl>
+              Pending
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => handleStatusChange(1)}
+              sx={{
+                backgroundColor: reservation.status === 1 ? 'black' : '#008080',
+                color: 'white',
+                width: '32%',
+              }}
+            >
+              Confirmed
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => handleStatusChange(2)}
+              sx={{
+                backgroundColor: reservation.status === 2 ? 'black' : '#008080',
+                color: 'white',
+                width: '32%',
+              }}
+            >
+              Closed
+            </Button>
+          </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{ mt: 2 }}>
           <Button type="submit" variant="contained" color="primary" fullWidth>
             Save Reservation
           </Button>
@@ -217,11 +256,11 @@ ReservationForm.propTypes = {
     status: PropTypes.number,
     guestId: PropTypes.number,
     userId: PropTypes.number,
-  }), // Define the shape for existingReservation
+  }),
 };
 
 ReservationForm.defaultProps = {
-  existingReservation: null, // Add this line
+  existingReservation: null,
 };
 
 export default ReservationForm;

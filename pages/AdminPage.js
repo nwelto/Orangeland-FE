@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import {
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box,
+} from '@mui/material';
 import { useAuth } from '../utils/context/authContext';
 import { getAllReservations } from '../API/ReservationData';
 import { getAllUsers } from '../API/UserData';
-import UserRow from '../components/UserRow';
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
@@ -18,21 +12,18 @@ const AdminPage = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    console.log('Current user:', user);
     if (user && user.isAdmin) {
       getAllUsers()
         .then((data) => {
-          console.log('Fetched users:', data);
           setUsers(data);
         })
-        .catch((error) => console.error(error));
+        .catch();
 
       getAllReservations()
         .then((data) => {
-          console.log('Fetched reservations:', data);
           setReservations(data);
         })
-        .catch((error) => console.error(error));
+        .catch();
     }
   }, [user]);
 
@@ -43,23 +34,31 @@ const AdminPage = () => {
   const getUserReservations = (userId) => reservations.filter((reservation) => reservation.userId === userId);
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="users table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Reservations</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.map((usr) => (
-            <UserRow key={usr.userId} user={usr} reservations={getUserReservations(usr.userId)} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h1" sx={{ fontSize: '2rem', marginBottom: '1rem' }}>Admin</Typography>
+      <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+        <Table aria-label="users table">
+          <TableHead sx={{ backgroundColor: '#33658A', color: 'white' }}>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Email</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Status</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Reservations</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map((usr, index) => (
+              <TableRow key={usr.userId} sx={{ backgroundColor: index % 2 === 0 ? '#008080' : '#33658A', color: 'white' }}>
+                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{usr.name}</TableCell>
+                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{usr.email}</TableCell>
+                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{usr.status}</TableCell>
+                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{getUserReservations(usr.userId).map((res) => `ID: ${res.id}`).join(', ')}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 

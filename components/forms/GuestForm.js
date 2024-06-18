@@ -23,7 +23,7 @@ const GuestForm = ({ guestId, existingGuest, onFormSubmit }) => {
           setPhoneNumber(guest.phoneNumber);
           setEmail(guest.email);
         })
-        .catch((error) => console.error('Error fetching guest:', error));
+        .catch();
     } else if (existingGuest) {
       setName(existingGuest.name);
       setRvType(existingGuest.rvType);
@@ -46,8 +46,7 @@ const GuestForm = ({ guestId, existingGuest, onFormSubmit }) => {
           }
           router.push('/guests/guestPage');
         })
-        .catch((error) => {
-          console.error('Error updating guest:', error);
+        .catch(() => {
           setFormError('Error updating guest');
         });
     } else {
@@ -58,8 +57,7 @@ const GuestForm = ({ guestId, existingGuest, onFormSubmit }) => {
           }
           router.push('/guests/guestPage');
         })
-        .catch((error) => {
-          console.error('Error creating guest:', error);
+        .catch(() => {
           setFormError('Error creating guest');
         });
     }

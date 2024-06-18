@@ -3,8 +3,6 @@ import { clientCredentials } from '../utils/client';
 
 // Create Reservation
 const createReservation = (newReservation) => new Promise((resolve, reject) => {
-  console.warn('Reservation to be sent to backend:', newReservation);
-
   fetch(`${clientCredentials.databaseURL}/reservations`, {
     method: 'POST',
     body: JSON.stringify(newReservation),
@@ -15,19 +13,16 @@ const createReservation = (newReservation) => new Promise((resolve, reject) => {
   })
     .then((resp) => {
       if (!resp.ok) {
-        return resp.json().then((error) => {
-          console.error('Error response from backend:', error);
+        return resp.json().then(() => {
           throw new Error('Error creating reservation');
         });
       }
       return resp.json();
     })
     .then((data) => {
-      console.warn('Response from backend:', data);
       resolve(data);
     })
-    .catch((error) => {
-      console.error('Error creating reservation:', error);
+    .catch(() => {
       reject(new Error('Error creating reservation'));
     });
 });
@@ -43,8 +38,7 @@ const getAllReservations = () => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching all reservations:', error);
+    .catch(() => {
       reject(new Error('Error fetching all reservations'));
     });
 });
@@ -60,8 +54,7 @@ const getReservationById = (reservationId) => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching reservation by ID:', error);
+    .catch(() => {
       reject(new Error('Error fetching reservation by ID'));
     });
 });
@@ -78,8 +71,7 @@ const updateReservation = (reservationId, updatedReservation) => new Promise((re
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error updating reservation:', error);
+    .catch(() => {
       reject(new Error('Error updating reservation'));
     });
 });
@@ -95,8 +87,7 @@ const deleteReservationById = (reservationId) => new Promise((resolve, reject) =
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error deleting reservation:', error);
+    .catch(() => {
       reject(new Error('Error deleting reservation'));
     });
 });
@@ -113,8 +104,7 @@ const addBikeToReservation = (reservationId, bikeRental) => new Promise((resolve
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error adding bike to reservation:', error);
+    .catch(() => {
       reject(new Error('Error adding bike to reservation'));
     });
 });
@@ -130,8 +120,7 @@ const getBikesForReservation = (reservationId) => new Promise((resolve, reject) 
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching bikes for reservation:', error);
+    .catch(() => {
       reject(new Error('Error fetching bikes for reservation'));
     });
 });
@@ -147,8 +136,7 @@ const removeBikeFromReservation = (reservationId, bikeId) => new Promise((resolv
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error removing bike from reservation:', error);
+    .catch(() => {
       reject(new Error('Error removing bike from reservation'));
     });
 });

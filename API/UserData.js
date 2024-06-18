@@ -12,8 +12,7 @@ const getUserById = (userId) => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching user by ID:', error);
+    .catch(() => {
       reject(new Error('Error fetching user by ID'));
     });
 });
@@ -29,8 +28,7 @@ const getAllUsers = () => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching all users:', error);
+    .catch(() => {
       reject(new Error('Error fetching all users'));
     });
 });
@@ -47,8 +45,7 @@ const updateUser = (userId, updatedUser) => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error updating user:', error);
+    .catch(() => {
       reject(new Error('Error updating user'));
     });
 });
@@ -64,8 +61,7 @@ const deleteUser = (userId) => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error deleting user:', error);
+    .catch(() => {
       reject(new Error('Error deleting user'));
     });
 });

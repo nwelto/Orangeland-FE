@@ -28,13 +28,13 @@ const AuthProvider = (props) => {
               .then((newUserInfo) => {
                 setUser({ fbUser: oAuthUser, ...newUserInfo });
               })
-              .catch((error) => console.error('Error registering user:', error));
+              .catch();
           }
         } else {
           setUser({ fbUser: oAuthUser, ...gamerInfo });
         }
       })
-      .catch((error) => console.error('Error checking user:', error));
+      .catch();
   }, [oAuthUser]);
 
   useEffect(() => {

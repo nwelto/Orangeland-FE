@@ -13,8 +13,7 @@ const createGuest = (newGuest) => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error creating guest:', error);
+    .catch(() => {
       reject(new Error('Error creating guest'));
     });
 });
@@ -31,8 +30,7 @@ const updateGuest = (guestId, updatedGuest) => new Promise((resolve, reject) => 
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error updating guest:', error);
+    .catch(() => {
       reject(new Error('Error updating guest'));
     });
 });
@@ -48,8 +46,7 @@ const getAllGuests = () => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching all guests:', error);
+    .catch(() => {
       reject(new Error('Error fetching all guests'));
     });
 });
@@ -65,8 +62,7 @@ const getGuestById = (guestId) => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error fetching guest by ID:', error);
+    .catch(() => {
       reject(new Error('Error fetching guest by ID'));
     });
 });
@@ -82,8 +78,7 @@ const deleteGuestById = (guestId) => new Promise((resolve, reject) => {
   })
     .then((resp) => resp.json())
     .then(resolve)
-    .catch((error) => {
-      console.error('Error deleting guest:', error);
+    .catch(() => {
       reject(new Error('Error deleting guest'));
     });
 });
