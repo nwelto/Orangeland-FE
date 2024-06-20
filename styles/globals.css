@@ -20,3 +20,17 @@ a {
 body {
   background-color: #ED7D3A;
 }
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.custom-signin-btn {
+  width: 200px;
+  height: 75px;
+  font-size: 20px;
+  border-radius: 10px;
+}

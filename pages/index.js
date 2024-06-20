@@ -25,6 +25,15 @@ function Home() {
     },
   };
 
+  const adminButtonStyle = {
+    background: 'linear-gradient(45deg, #FFA500 30%, #008080 90%)',
+    color: 'white',
+    marginBottom: '10px',
+    '&:hover': {
+      background: 'linear-gradient(45deg, #FF8C00 30%, #006666 90%)',
+    },
+  };
+
   return (
     <div
       className="text-center d-flex flex-column justify-content-center align-content-center"
@@ -35,7 +44,7 @@ function Home() {
         margin: '0 auto',
       }}
     >
-      <h1>Hello {user.fbUser.displayName}!</h1>
+      <h1 style={{ marginBottom: '40px' }}>Hello {user.fbUser.displayName}!</h1>
 
       <div className="d-grid gap-2">
         <Button variant="contained" size="large" onClick={() => navigateTo('/guests/guestPage')} sx={buttonStyle}>
@@ -51,7 +60,7 @@ function Home() {
           RV Sites
         </Button>
         {user.isAdmin && (
-          <Button variant="contained" size="large" onClick={() => navigateTo('/AdminPage')} sx={buttonStyle}>
+          <Button variant="contained" size="large" onClick={() => navigateTo('/AdminPage')} sx={adminButtonStyle}>
             Admin
           </Button>
         )}
