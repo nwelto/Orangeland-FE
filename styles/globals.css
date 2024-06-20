@@ -18,7 +18,10 @@ a {
 }
 
 body {
-  background-color: #ED7D3A;
+  background: linear-gradient(to bottom, #ED7D3A, #FFD700);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 .center-container {

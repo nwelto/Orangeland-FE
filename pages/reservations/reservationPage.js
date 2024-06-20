@@ -29,8 +29,8 @@ const ReservationsPage = () => {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
-      <h1>All Reservations</h1>
+    <div style={{ position: 'relative', marginTop: '2rem' }}>
+      <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Reservations</h1>
       <Grid container spacing={2}>
         {reservations.map((reservation) => (
           <Grid item xs={12} sm={6} md={4} key={reservation.id}>

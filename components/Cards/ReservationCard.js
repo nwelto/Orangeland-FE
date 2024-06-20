@@ -4,7 +4,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ButtonBase from '@mui/material/ButtonBase';
 import { useRouter } from 'next/router';
 import { deleteReservationById } from '../../API/ReservationData';
@@ -71,7 +73,12 @@ const ReservationCard = ({ reservation, onEdit }) => {
       <Card
         variant="outlined"
         sx={{
-          backgroundColor: '#008080', color: 'white', borderRadius: 2, width: '100%',
+          backgroundColor: '#008080',
+          color: 'white',
+          borderRadius: 4,
+          border: '2px solid #000',
+          boxShadow: 3,
+          width: '100%',
         }}
       >
         <CardContent>
@@ -104,12 +111,20 @@ const ReservationCard = ({ reservation, onEdit }) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" variant="contained" sx={{ backgroundColor: '#33658A', color: 'white' }} onClick={(e) => { e.stopPropagation(); handleEdit(reservation.id); }}>
-            Edit
-          </Button>
-          <Button size="small" variant="contained" color="error" onClick={(e) => { e.stopPropagation(); handleDelete(reservation.id); }}>
-            Delete
-          </Button>
+          <IconButton
+            size="small"
+            sx={{ backgroundColor: '#33658A', color: 'white', marginRight: 1 }}
+            onClick={(e) => { e.stopPropagation(); handleEdit(reservation.id); }}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            size="small"
+            sx={{ backgroundColor: '#8B0000', color: 'white' }}
+            onClick={(e) => { e.stopPropagation(); handleDelete(reservation.id); }}
+          >
+            <DeleteIcon />
+          </IconButton>
         </CardActions>
       </Card>
     </ButtonBase>
