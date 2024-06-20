@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
+import ButtonBase from '@mui/material/ButtonBase';
 import { useRouter } from 'next/router';
 import { deleteReservationById } from '../../API/ReservationData';
 import { getGuestById } from '../../API/GuestData';
@@ -55,6 +56,10 @@ const ReservationCard = ({ reservation, onEdit }) => {
     router.push(`/reservations/edit/${reservationId}`);
   };
 
+  const handleView = (reservationId) => {
+    router.push(`/reservations/${reservationId}`);
+  };
+
   const statusMap = {
     0: 'Pending',
     1: 'Confirmed',
@@ -62,45 +67,52 @@ const ReservationCard = ({ reservation, onEdit }) => {
   };
 
   return (
-    <Card variant="outlined" sx={{ backgroundColor: '#008080', color: 'white', borderRadius: 2 }}>
-      <CardContent>
-        <Typography variant="h5" component="div" sx={{ color: 'white' }}>
-          Reservation ID: {reservation.id}
-        </Typography>
-        <Typography sx={{ color: 'white' }}>
-          User: {userName}
-        </Typography>
-        <Typography sx={{ color: 'white' }}>
-          Site: {siteNumber}
-        </Typography>
-        <Typography sx={{ color: 'white' }}>
-          Guest: {guestName}
-        </Typography>
-        <Typography sx={{ color: 'white' }}>
-          Start Date: {reservation.startDate}
-        </Typography>
-        <Typography sx={{ color: 'white' }}>
-          End Date: {reservation.endDate}
-        </Typography>
-        <Typography sx={{ color: 'white' }}>
-          Number of Guests: {reservation.numberOfGuests}
-        </Typography>
-        <Typography sx={{ color: 'white' }}>
-          Number of Dogs: {reservation.numberOfDogs}
-        </Typography>
-        <Typography sx={{ color: 'white' }}>
-          Status: {statusMap[reservation.status]}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" variant="contained" sx={{ backgroundColor: '#33658A', color: 'white' }} onClick={() => handleEdit(reservation.id)}>
-          Edit
-        </Button>
-        <Button size="small" variant="contained" color="error" onClick={() => handleDelete(reservation.id)}>
-          Delete
-        </Button>
-      </CardActions>
-    </Card>
+    <ButtonBase onClick={() => handleView(reservation.id)} sx={{ width: '100%' }}>
+      <Card
+        variant="outlined"
+        sx={{
+          backgroundColor: '#008080', color: 'white', borderRadius: 2, width: '100%',
+        }}
+      >
+        <CardContent>
+          <Typography variant="h5" component="div" sx={{ color: 'white' }}>
+            Reservation ID: {reservation.id}
+          </Typography>
+          <Typography sx={{ color: 'white' }}>
+            User: {userName}
+          </Typography>
+          <Typography sx={{ color: 'white' }}>
+            Site: {siteNumber}
+          </Typography>
+          <Typography sx={{ color: 'white' }}>
+            Guest: {guestName}
+          </Typography>
+          <Typography sx={{ color: 'white' }}>
+            Start Date: {reservation.startDate}
+          </Typography>
+          <Typography sx={{ color: 'white' }}>
+            End Date: {reservation.endDate}
+          </Typography>
+          <Typography sx={{ color: 'white' }}>
+            Number of Guests: {reservation.numberOfGuests}
+          </Typography>
+          <Typography sx={{ color: 'white' }}>
+            Number of Dogs: {reservation.numberOfDogs}
+          </Typography>
+          <Typography sx={{ color: 'white' }}>
+            Status: {statusMap[reservation.status]}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small" variant="contained" sx={{ backgroundColor: '#33658A', color: 'white' }} onClick={(e) => { e.stopPropagation(); handleEdit(reservation.id); }}>
+            Edit
+          </Button>
+          <Button size="small" variant="contained" color="error" onClick={(e) => { e.stopPropagation(); handleDelete(reservation.id); }}>
+            Delete
+          </Button>
+        </CardActions>
+      </Card>
+    </ButtonBase>
   );
 };
 

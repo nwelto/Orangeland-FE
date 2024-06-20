@@ -15,24 +15,22 @@ const BikePage = () => {
   const [selectedReservations, setSelectedReservations] = useState({});
 
   const fetchBikesAndReservations = () => {
-    if (user && user.isAdmin) {
-      getAllBikes()
-        .then(setBikes)
-        .catch();
+    getAllBikes()
+      .then(setBikes)
+      .catch();
 
-      getAllReservations()
-        .then((data) => {
-          setReservations(data);
-          data.forEach((reservation) => {
-            getGuestById(reservation.guestId)
-              .then((guest) => {
-                setGuests((prev) => ({ ...prev, [reservation.guestId]: guest.name }));
-              })
-              .catch();
-          });
-        })
-        .catch();
-    }
+    getAllReservations()
+      .then((data) => {
+        setReservations(data);
+        data.forEach((reservation) => {
+          getGuestById(reservation.guestId)
+            .then((guest) => {
+              setGuests((prev) => ({ ...prev, [reservation.guestId]: guest.name }));
+            })
+            .catch();
+        });
+      })
+      .catch();
   };
 
   useEffect(() => {
@@ -64,10 +62,6 @@ const BikePage = () => {
       })
       .catch();
   };
-
-  if (!user || !user.isAdmin) {
-    return <Typography variant="h6">Access Denied</Typography>;
-  }
 
   return (
     <>

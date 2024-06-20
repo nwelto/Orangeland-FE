@@ -86,13 +86,13 @@ const ReservationForm = ({ onSave, existingReservation }) => {
       action(existingReservation.id, payload)
         .then(() => {
           onSave();
-          router.push('/reservations/reservationPage');
+          router.back();
         });
     } else {
       action(payload)
         .then(() => {
           onSave();
-          router.push('/reservations/reservationPage');
+          router.back();
         });
     }
   };
@@ -237,6 +237,11 @@ const ReservationForm = ({ onSave, existingReservation }) => {
         <Grid item xs={12} sx={{ mt: 2 }}>
           <Button type="submit" variant="contained" color="primary" fullWidth>
             Save Reservation
+          </Button>
+        </Grid>
+        <Grid item xs={12} sx={{ mt: 2 }}>
+          <Button variant="contained" color="secondary" fullWidth onClick={() => router.back()}>
+            Back
           </Button>
         </Grid>
       </Grid>

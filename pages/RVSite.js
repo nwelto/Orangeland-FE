@@ -2,24 +2,16 @@ import React, { useEffect, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box,
 } from '@mui/material';
-import { useAuth } from '../utils/context/authContext';
 import { getAllRVSites } from '../API/RVSiteData';
 
 const RVSitePage = () => {
-  const { user } = useAuth();
   const [rvSites, setRVSites] = useState([]);
 
   useEffect(() => {
-    if (user && user.isAdmin) {
-      getAllRVSites()
-        .then(setRVSites)
-        .catch();
-    }
-  }, [user]);
-
-  if (!user || !user.isAdmin) {
-    return <Typography variant="h6">Access Denied</Typography>;
-  }
+    getAllRVSites()
+      .then(setRVSites)
+      .catch();
+  }, []);
 
   return (
     <Box sx={{ padding: 2 }}>
