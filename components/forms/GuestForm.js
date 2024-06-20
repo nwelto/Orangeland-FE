@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  TextField, Button, Paper, Typography,
+  TextField, Button, Typography, Grid, Box, FormControl,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
@@ -64,47 +64,78 @@ const GuestForm = ({ guestId, existingGuest, onFormSubmit }) => {
   };
 
   return (
-    <Paper style={{ padding: '1em', marginTop: '1em' }}>
-      <Typography variant="h6">{guestId ? 'Update Guest' : 'Create Guest'}</Typography>
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: '2rem', marginBottom: 2 }}>
+        {guestId ? 'Update Guest' : 'Create Guest'}
+      </Typography>
       {formError && <Typography color="error">{formError}</Typography>}
       <form onSubmit={handleSubmit}>
-        <TextField
-          label="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="RV Type"
-          value={rvType}
-          onChange={(e) => setRvType(e.target.value)}
-          required
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Phone Number"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          required
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          fullWidth
-          margin="normal"
-        />
-        <Button type="submit" variant="contained" color="primary">
-          {guestId ? 'Update Guest' : 'Create Guest'}
-        </Button>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <FormControl fullWidth margin="normal">
+              <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'black' }}>Name</Typography>
+              <TextField
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                fullWidth
+                margin="normal"
+                style={{ backgroundColor: 'white' }}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth margin="normal">
+              <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'black' }}>RV Type</Typography>
+              <TextField
+                value={rvType}
+                onChange={(e) => setRvType(e.target.value)}
+                required
+                fullWidth
+                margin="normal"
+                style={{ backgroundColor: 'white' }}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth margin="normal">
+              <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'black' }}>Phone Number</Typography>
+              <TextField
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+                fullWidth
+                margin="normal"
+                style={{ backgroundColor: 'white' }}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth margin="normal">
+              <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'black' }}>Email</Typography>
+              <TextField
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                fullWidth
+                margin="normal"
+                style={{ backgroundColor: 'white' }}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sx={{ mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              {guestId ? 'Update Guest' : 'Create Guest'}
+            </Button>
+          </Grid>
+          <Grid item xs={12} sx={{ mt: 2 }}>
+            <Button variant="contained" color="secondary" fullWidth onClick={() => router.back()}>
+              Back
+            </Button>
+          </Grid>
+        </Grid>
       </form>
-    </Paper>
+    </Box>
   );
 };
 

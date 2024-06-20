@@ -14,9 +14,16 @@ const RVSitePage = () => {
   }, []);
 
   return (
-    <Box sx={{ padding: 2 }}>
-      <Typography variant="h1" sx={{ fontSize: '2rem', marginBottom: '1rem' }}>RV Sites</Typography>
-      <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+    <Box sx={{ padding: 2, marginTop: '1rem' }}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+        RV Sites
+      </Typography>
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: 1, marginBottom: 3, boxShadow: 3, border: '1px solid #000',
+        }}
+      >
         <Table aria-label="rv sites table">
           <TableHead sx={{ backgroundColor: '#33658A', color: 'white' }}>
             <TableRow>

@@ -65,10 +65,17 @@ const BikePage = () => {
 
   return (
     <>
-      <Typography variant="h1" component="h1" gutterBottom sx={{ fontSize: '2.5rem' }}>
-        Bikes
-      </Typography>
-      <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+      <Box sx={{ marginTop: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+          Bikes
+        </Typography>
+      </Box>
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: 1, marginBottom: 3, boxShadow: 3, border: '1px solid #000',
+        }}
+      >
         <Table aria-label="bikes table">
           <TableHead sx={{ backgroundColor: '#33658A', color: 'white' }}>
             <TableRow>
@@ -105,12 +112,25 @@ const BikePage = () => {
                     <Select
                       value={selectedReservations[bike.id] || ''}
                       onChange={(e) => handleReservationChange(bike.id, e.target.value)}
+                      sx={{
+                        backgroundColor: '#33658A',
+                        color: 'white',
+                        '& .MuiSelect-icon': {
+                          color: 'white',
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'green',
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'white',
+                        },
+                      }}
                     >
                       <MenuItem value="">
                         <em>Select Reservation</em>
                       </MenuItem>
                       {reservations.map((reservation) => (
-                        <MenuItem key={reservation.id} value={reservation.id}>
+                        <MenuItem key={reservation.id} value={reservation.id} sx={{ backgroundColor: '#33658A', color: 'white', '&:hover': { backgroundColor: 'green' } }}>
                           {`Reservation ID: ${reservation.id} (Guest: ${guests[reservation.guestId] || 'Loading...'})`}
                         </MenuItem>
                       ))}

@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Button, CircularProgress, Grid, MenuItem, Select, FormControl,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Button, CircularProgress, Grid, MenuItem, Select, FormControl, IconButton,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/router';
-import { getReservationById, addBikeToReservation, removeBikeFromReservation } from '../../API/ReservationData';
+import {
+  getReservationById, addBikeToReservation, removeBikeFromReservation, deleteReservationById,
+} from '../../API/ReservationData';
 import { getAllBikes } from '../../API/BikeData';
+import { getUserById } from '../../API/UserData';
+import { getGuestById } from '../../API/GuestData';
+import { getRVSiteById } from '../../API/RVSiteData';
 
 const ReservationById = () => {
   const router = useRouter();
@@ -13,12 +20,42 @@ const ReservationById = () => {
   const [loading, setLoading] = useState(true);
   const [newBikeId, setNewBikeId] = useState('');
   const [bikes, setBikes] = useState([]);
+  const [userName, setUserName] = useState('');
+  const [guestName, setGuestName] = useState('');
+  const [siteNumber, setSiteNumber] = useState('');
 
   const fetchReservation = () => {
     setLoading(true);
     getReservationById(id)
       .then((response) => {
         setReservation(response);
+        if (response.userId) {
+          getUserById(response.userId)
+            .then((user) => {
+              setUserName(user.name);
+            })
+            .catch((error) => {
+              console.error('Error fetching user data', error);
+            });
+        }
+        if (response.guestId) {
+          getGuestById(response.guestId)
+            .then((guest) => {
+              setGuestName(guest.name);
+            })
+            .catch((error) => {
+              console.error('Error fetching guest data', error);
+            });
+        }
+        if (response.siteId) {
+          getRVSiteById(response.siteId)
+            .then((site) => {
+              setSiteNumber(site.siteNumber);
+            })
+            .catch((error) => {
+              console.error('Error fetching site data', error);
+            });
+        }
         setLoading(false);
       })
       .catch((error) => {
@@ -71,6 +108,20 @@ const ReservationById = () => {
       });
   };
 
+  const handleEdit = () => {
+    router.push(`/reservations/edit/${id}`);
+  };
+
+  const handleDelete = () => {
+    deleteReservationById(id)
+      .then(() => {
+        router.push('/reservations/reservationPage');
+      })
+      .catch((error) => {
+        console.error('Error deleting reservation:', error);
+      });
+  };
+
   if (loading) {
     return (
       <Box sx={{
@@ -97,74 +148,114 @@ const ReservationById = () => {
   };
 
   return (
-    <Box sx={{ padding: 2 }}>
-      <Typography variant="h1" sx={{ fontSize: '2rem', marginBottom: '1rem' }}>Reservation Details</Typography>
-      <TableContainer component={Paper} sx={{ borderRadius: 2, marginBottom: 3 }}>
+    <Box sx={{ padding: 2, position: 'relative' }}>
+      <Typography
+        variant="h4"
+        sx={{
+          fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem', paddingTop: 2,
+        }}
+      >Reservation Details
+      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
+        <IconButton
+          size="small"
+          sx={{ backgroundColor: '#33658A', color: 'white', marginRight: 1 }}
+          onClick={handleEdit}
+        >
+          <EditIcon sx={{ fontSize: 24 }} />
+        </IconButton>
+        <IconButton
+          size="small"
+          sx={{ backgroundColor: '#8B0000', color: 'white' }}
+          onClick={handleDelete}
+        >
+          <DeleteIcon sx={{ fontSize: 24 }} />
+        </IconButton>
+      </Box>
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: 1, marginBottom: 3, boxShadow: 3, border: '2px solid #000',
+        }}
+      >
         <Table aria-label="reservation details table">
           <TableHead sx={{ backgroundColor: '#33658A', color: 'white' }}>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Field</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Value</TableCell>
+              <TableCell sx={{
+                fontWeight: 'bold', color: 'white', borderBottom: '2px solid #000', width: '20%',
+              }}
+              >Detail
+              </TableCell>
+              <TableCell sx={{
+                fontWeight: 'bold', color: 'white', borderBottom: '2px solid #000', width: '80%',
+              }}
+              >Information
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow sx={{ backgroundColor: '#008080', color: 'white' }}>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>ID</TableCell>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{reservation.id}</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>ID</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{reservation.id}</TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: '#33658A', color: 'white' }}>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>User ID</TableCell>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{reservation.userId}</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>User</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{userName}</TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: '#008080', color: 'white' }}>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>Guest ID</TableCell>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{reservation.guestId}</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>Guest</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{guestName}</TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: '#33658A', color: 'white' }}>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>Site ID</TableCell>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{reservation.siteId}</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>Site</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{siteNumber}</TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: '#008080', color: 'white' }}>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>Start Date</TableCell>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{reservation.startDate}</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>Start Date</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{reservation.startDate}</TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: '#33658A', color: 'white' }}>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>End Date</TableCell>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{reservation.endDate}</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>End Date</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{reservation.endDate}</TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: '#008080', color: 'white' }}>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>Number of Guests</TableCell>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{reservation.numberOfGuests}</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>Number of Guests</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{reservation.numberOfGuests}</TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: '#33658A', color: 'white' }}>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>Number of Dogs</TableCell>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{reservation.numberOfDogs}</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>Number of Dogs</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{reservation.numberOfDogs}</TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: '#008080', color: 'white' }}>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>Status</TableCell>
-              <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{statusMap[reservation.status]}</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>Status</TableCell>
+              <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{statusMap[reservation.status]}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
 
-      <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '1.5rem', marginBottom: '1rem' }}>Bike Reservations</Typography>
-      <TableContainer component={Paper} sx={{ borderRadius: 2, marginBottom: 3 }}>
+      <Typography variant="h4" sx={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Bike Reservations</Typography>
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: 1, marginBottom: 3, boxShadow: 3, border: '2px solid #000',
+        }}
+      >
         <Table aria-label="bike reservations table">
           <TableHead sx={{ backgroundColor: '#33658A', color: 'white' }}>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Bike ID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Rental Fee</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Actions</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', borderBottom: '2px solid #000' }}>Bike ID</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', borderBottom: '2px solid #000' }}>Rental Fee</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'white', borderBottom: '2px solid #000' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {reservation.bikeRentals.map((bikeRental, index) => (
               <TableRow key={bikeRental.bikeId} sx={{ backgroundColor: index % 2 === 0 ? '#008080' : '#33658A', color: 'white' }}>
-                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{bikeRental.bikeId}</TableCell>
-                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{bikeRental.bike.rentalFee}</TableCell>
-                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>
-                  <Button variant="contained" color="error" onClick={() => handleRemoveBike(bikeRental.bikeId)}>
+                <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{bikeRental.bikeId}</TableCell>
+                <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>{bikeRental.bike.rentalFee}</TableCell>
+                <TableCell sx={{ color: 'white', borderBottom: '2px solid #000' }}>
+                  <Button variant="contained" color="error" size="small" onClick={() => handleRemoveBike(bikeRental.bikeId)}>
                     Remove
                   </Button>
                 </TableCell>
@@ -175,7 +266,13 @@ const ReservationById = () => {
       </TableContainer>
 
       <Box sx={{ marginBottom: 3 }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'black', marginBottom: '0.5rem' }}>Bike</Typography>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 'bold', fontSize: '1.5rem', color: 'black', marginBottom: '0.5rem',
+          }}
+        >Bike
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <FormControl fullWidth variant="outlined" sx={{ backgroundColor: '#33658A', borderRadius: 1 }}>

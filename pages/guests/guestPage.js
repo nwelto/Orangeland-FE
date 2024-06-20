@@ -27,8 +27,8 @@ const GuestPage = () => {
   };
 
   return (
-    <div>
-      <h1>All Guests</h1>
+    <div style={{ position: 'relative', marginTop: '2rem' }}>
+      <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Guests</h1>
       <Grid container spacing={2}>
         {guests.map((guest) => (
           <Grid item key={guest.guestId} xs={12} sm={6} md={4}>

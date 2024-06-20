@@ -4,7 +4,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/router';
 import { deleteGuestById } from '../../API/GuestData';
 
@@ -25,7 +27,16 @@ const GuestCard = ({ guest, onEdit }) => {
   };
 
   return (
-    <Card variant="outlined" sx={{ backgroundColor: '#008080', color: 'white', borderRadius: 2 }}>
+    <Card
+      variant="outlined"
+      sx={{
+        backgroundColor: '#008080',
+        color: 'white',
+        borderRadius: 4,
+        border: '2px solid #000',
+        boxShadow: 3,
+      }}
+    >
       <CardContent>
         <Typography variant="h5" component="div" sx={{ color: 'white' }}>
           {guest.name || 'N/A'}
@@ -41,12 +52,20 @@ const GuestCard = ({ guest, onEdit }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="contained" sx={{ backgroundColor: '#33658A', color: 'white' }} onClick={() => handleEdit(guest.guestId)}>
-          Edit
-        </Button>
-        <Button size="small" variant="contained" color="error" onClick={() => handleDelete(guest.guestId)}>
-          Delete
-        </Button>
+        <IconButton
+          size="small"
+          sx={{ backgroundColor: '#33658A', color: 'white', marginRight: 1 }}
+          onClick={() => handleEdit(guest.guestId)}
+        >
+          <EditIcon />
+        </IconButton>
+        <IconButton
+          size="small"
+          sx={{ backgroundColor: '#8B0000', color: 'white' }}
+          onClick={() => handleDelete(guest.guestId)}
+        >
+          <DeleteIcon />
+        </IconButton>
       </CardActions>
     </Card>
   );
