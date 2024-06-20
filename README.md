@@ -26,6 +26,11 @@ OrangeLand is a web application designed to manage reservations for RV sites and
 - Each reservation card acts as a button to view detailed information about a single reservation.
 - Form to add and edit reservations, with automatic navigation back to the previous page after editing.
 
+### Guests
+- View a list of all guests.
+- Each guest card provides details and options for editing or removing the guest.
+- Form to add new guests to the system.
+
 ### Bikes
 - View a list of all bikes.
 - Add or remove bikes from reservations.
