@@ -49,7 +49,6 @@ const AdminPage = () => {
             <TableRow>
               <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Name</TableCell>
               <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Email</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Status</TableCell>
               <TableCell sx={{ fontWeight: 'bold', color: 'white', border: '2px solid #000' }}>Reservations</TableCell>
             </TableRow>
           </TableHead>
@@ -58,7 +57,6 @@ const AdminPage = () => {
               <TableRow key={usr.userId} sx={{ backgroundColor: index % 2 === 0 ? '#008080' : '#33658A', color: 'white' }}>
                 <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{usr.name}</TableCell>
                 <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{usr.email}</TableCell>
-                <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{usr.status}</TableCell>
                 <TableCell sx={{ color: 'white', border: '2px solid #000' }}>{getUserReservations(usr.userId).map((res) => `ID: ${res.id}`).join(', ')}</TableCell>
               </TableRow>
             ))}
