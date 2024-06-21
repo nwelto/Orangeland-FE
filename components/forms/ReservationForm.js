@@ -24,6 +24,7 @@ const ReservationForm = ({ onSave, existingReservation }) => {
   });
   const [guests, setGuests] = useState([]);
   const [rvSites, setRVSites] = useState([]);
+  const [conflict, setConflict] = useState(null);
 
   useEffect(() => {
     getAllGuests()
@@ -64,7 +65,7 @@ const ReservationForm = ({ onSave, existingReservation }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!reservation.siteId || !reservation.guestId || !reservation.startDate || !reservation.endDate || !reservation.userId) {
@@ -80,20 +81,20 @@ const ReservationForm = ({ onSave, existingReservation }) => {
       numberOfDogs: parseInt(reservation.numberOfDogs, 10),
     };
 
-    const action = existingReservation && existingReservation.id ? updateReservation : createReservation;
-
-    if (existingReservation && existingReservation.id) {
-      action(existingReservation.id, payload)
-        .then(() => {
-          onSave();
-          router.back();
-        });
-    } else {
-      action(payload)
-        .then(() => {
-          onSave();
-          router.back();
-        });
+    try {
+      if (existingReservation && existingReservation.id) {
+        await updateReservation(existingReservation.id, payload);
+      } else {
+        await createReservation(payload);
+      }
+      onSave();
+      router.back();
+    } catch (error) {
+      if (error.message.includes('Conflict')) {
+        setConflict('Reservation conflict detected.');
+      } else {
+        setConflict('That Date is not available for that Site.');
+      }
     }
   };
 
@@ -107,6 +108,13 @@ const ReservationForm = ({ onSave, existingReservation }) => {
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
+        {conflict && (
+          <Grid item xs={12}>
+            <Typography variant="body1" color="error">
+              {conflict}
+            </Typography>
+          </Grid>
+        )}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth margin="normal">
             <Typography variant="body1" sx={{ fontWeight: 'bold' }}>Guest</Typography>
